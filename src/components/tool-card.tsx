@@ -22,16 +22,19 @@ export function ToolCard({ tool }: { tool: ToolFinder }) {
       </div>
       <p className="text-muted-foreground mb-4 line-clamp-2">{tool.description}</p>
       {tool.free_score !== null && (
-        <div className="flex items-center gap-2 mb-4">
-          <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className={`h-full ${getFreeScoreColor(tool.free_score)} transition-all`}
-              style={{ width: `${tool.free_score}%` }}
-            />
+        <div className="space-y-1 mb-4">
+          <div className="text-sm text-muted-foreground">무료 추천 지수</div>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+              <div
+                className={`h-full ${getFreeScoreColor(tool.free_score)} transition-all`}
+                style={{ width: `${tool.free_score}%` }}
+              />
+            </div>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">
+              {Math.round(tool.free_score)}%
+            </span>
           </div>
-          <span className="text-sm text-muted-foreground whitespace-nowrap">
-            무료 {Math.round(tool.free_score)}%
-          </span>
         </div>
       )}
       <div className="flex items-center justify-between">
