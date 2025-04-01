@@ -51,7 +51,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="icon" href="/toolfinder_favicon.ico" />
+        <link rel="shortcut icon" href="/toolfinder_favicon.ico" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
