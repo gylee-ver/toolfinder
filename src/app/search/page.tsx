@@ -29,7 +29,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           
           <div>
             <h1 className="text-2xl font-bold text-foreground mb-6">
-              "{query}" 검색 결과
+              &ldquo;{query}&rdquo; 검색 결과
             </h1>
             
             {tools.length === 0 ? (
