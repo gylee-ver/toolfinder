@@ -11,20 +11,36 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "툴파인더",
   description: "당신에게 필요한 도구를 찾아보세요",
+  metadataBase: new URL('https://www.toolfinder.kr'),
   icons: {
-    icon: "/toolfinder_favicon.ico",
+    icon: "https://www.toolfinder.kr/toolfinder_favicon.ico",
   },
   openGraph: {
     title: "툴파인더",
     description: "당신에게 필요한 도구를 찾아보세요",
+    url: 'https://www.toolfinder.kr',
+    siteName: '툴파인더',
+    locale: 'ko_KR',
+    type: 'website',
     images: [
       {
-        url: "/toolfinder_og.png",
+        url: "https://www.toolfinder.kr/toolfinder_og.png",
         width: 1200,
         height: 630,
         alt: "툴파인더",
       },
     ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: 'https://www.toolfinder.kr',
   },
 };
 
