@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import type { ToolFinder } from '@/types/database'
+import { Favicon } from './favicon'
 
 function getFreeScoreColor(score: number): string {
   if (score >= 80) return 'bg-green-500'
@@ -15,15 +15,7 @@ export function ToolCard({ tool }: { tool: ToolFinder }) {
       className="group block p-6 bg-card/50 rounded-lg border border-border hover:border-primary transition-colors"
     >
       <div className="flex items-center gap-3 mb-2">
-        <div className="relative w-6 h-6 flex-shrink-0">
-          <Image
-            src={`https://www.google.com/s2/favicons?domain=${tool.url}&sz=32`}
-            alt={`${tool.name} favicon`}
-            width={24}
-            height={24}
-            className="rounded-sm"
-          />
-        </div>
+        <Favicon url={tool.url} name={tool.name} />
         <h2 className="text-xl font-semibold text-foreground group-hover:text-primary">
           {tool.name}
         </h2>

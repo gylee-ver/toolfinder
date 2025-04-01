@@ -4,6 +4,7 @@ import { LoadingSpinner } from '@/components/loading-spinner'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ToolFinder } from '@/types/database'
+import { Favicon } from '@/components/favicon'
 
 interface ToolPageProps {
   params: {
@@ -79,16 +80,12 @@ async function ToolContent({ id }: { id: string }) {
     <div className="space-y-12">
       <div className="bg-card/50 rounded-lg border border-border p-8">
         <div className="flex items-start gap-6">
-          {tool.favicon && (
-            <div className="w-16 h-16 relative flex-shrink-0">
-              <Image
-                src={tool.favicon}
-                alt={`${tool.name} favicon`}
-                fill
-                className="object-contain rounded-lg"
-              />
-            </div>
-          )}
+          <Favicon 
+            url={tool.favicon} 
+            name={tool.name} 
+            size={{ width: 64, height: 64 }}
+            className="w-16 h-16"
+          />
           <div className="flex-1 space-y-4">
             <h1 className="text-3xl font-bold text-foreground">{tool.name}</h1>
             <p className="text-muted-foreground text-lg">{tool.description}</p>
