@@ -4,6 +4,7 @@ import { LoadingSpinner } from '@/components/loading-spinner'
 import { SearchBar } from '@/components/search-bar'
 import { ToolCard } from '@/components/tool-card'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ToolFinder } from '@/types/database'
 
 function getFreeScoreColor(score: number): string {
@@ -65,8 +66,17 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="text-center space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-foreground">AI 도구 찾기</h1>
-              <p className="text-xl text-muted-foreground">당신에게 필요한 AI 도구를 찾아보세요</p>
+              <div className="flex justify-center">
+                <Image
+                  src="/toolfinder_logo.png"
+                  alt="AI 도구 찾기"
+                  width={320}
+                  height={96}
+                  className="h-auto w-auto max-h-24"
+                  priority
+                />
+              </div>
+              <p className="text-xl text-muted-foreground">당신에게 필요한 도구를 찾아보세요</p>
             </div>
             <div className="w-full max-w-2xl mx-auto">
               <SearchBar />
