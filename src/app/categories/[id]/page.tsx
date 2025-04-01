@@ -7,8 +7,9 @@ import type { ToolFinder } from '@/types/database'
 
 interface CategoryPageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 function getFreeScoreColor(score: number): string {
@@ -17,20 +18,20 @@ function getFreeScoreColor(score: number): string {
   return 'bg-red-500'
 }
 
-async function CategoryTools({ categoryId }: { categoryId: string }) {
-  const tools = await getToolsByCategory(categoryId)
+async function CategoryContent({ id }: { id: string }) {
+  const tools = await getToolsByCategory(id)
 
   if (!tools || tools.length === 0) {
     return (
       <div className="bg-card/50 rounded-lg border border-border p-6">
-        <p className="text-muted-foreground text-center">이 카테고리의 도구를 찾을 수 없습니다.</p>
+        <p className="text-muted-foreground text-center">도구를 찾을 수 없습니다.</p>
       </div>
     )
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {tools.map((tool: ToolFinder) => (
+      {tools.map((tool) => (
         <ToolCard key={tool.id} tool={tool} />
       ))}
     </div>
@@ -38,15 +39,15 @@ async function CategoryTools({ categoryId }: { categoryId: string }) {
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const decodedId = decodeURIComponent(params.id);
+  const decodedId = decodeURIComponent(params.id)
   const categoryName = CATEGORY_MAPPING[decodedId] || decodedId;
 
   return (
     <main className="container px-4 py-12">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-12">
         <h1 className="text-3xl font-bold text-foreground">{categoryName} 도구</h1>
         <Suspense fallback={<LoadingSpinner />}>
-          <CategoryTools categoryId={params.id} />
+          <CategoryContent id={decodedId} />
         </Suspense>
       </div>
     </main>
