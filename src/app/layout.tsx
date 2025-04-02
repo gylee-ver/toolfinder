@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { AccordionMenu } from "@/components/accordion-menu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -280,12 +281,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.className
-        )}
-      >
+      <body className={cn(inter.className, "min-h-screen bg-background font-sans antialiased")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -294,22 +290,27 @@ export default function RootLayout({
         >
           <div className="relative flex min-h-screen flex-col">
             <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="container h-14 flex items-center">
-                <Link href="/" className="flex items-center">
-                  <Image
-                    src="/toolfinder_header.png"
-                    alt="툴파인더 - 업무 효율을 높이는 소프트웨어 추천 플랫폼"
-                    width={280}
-                    height={65}
-                    className="h-12 w-auto"
-                    priority
-                  />
-                </Link>
+              <div className="container flex h-14 items-center">
+                <div className="mr-4 flex">
+                  <Link href="/" className="flex items-center">
+                    <Image
+                      src="/toolfinder_header.png"
+                      alt="툴파인더 - 업무 효율을 높이는 소프트웨어 추천 플랫폼"
+                      width={280}
+                      height={65}
+                      className="h-12 w-auto"
+                      priority
+                    />
+                  </Link>
+                </div>
+                <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+                  <div className="w-full flex-1 md:w-auto md:flex-none">
+                    <AccordionMenu />
+                  </div>
+                </div>
               </div>
             </header>
-            <main className="flex-1">
-              {children}
-            </main>
+            <main className="flex-1">{children}</main>
             <footer className="border-t border-border py-6 md:py-8">
               <div className="container flex flex-col items-center gap-4 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -328,9 +329,14 @@ export default function RootLayout({
                   <Link href="/categories" className="hover:underline">
                     카테고리
                   </Link>
-                  <Link href="/contact" className="hover:underline">
+                  <a
+                    href="https://forms.gle/scFWRXenuPyKZBav9"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
                     문의하기
-                  </Link>
+                  </a>
                 </nav>
               </div>
             </footer>
