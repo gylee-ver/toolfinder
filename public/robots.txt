@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /categories/
+Allow: /tools/
+Disallow: /search
+Sitemap: https://www.toolfinder.kr/sitemap.xml 
