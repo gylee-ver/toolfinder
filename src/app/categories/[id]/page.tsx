@@ -1,57 +1,13 @@
 import { Suspense } from 'react'
-import { getToolsByCategory, CATEGORY_MAPPING, subscribeToToolsByCategory } from '@/lib/data'
+import { CATEGORY_MAPPING } from '@/lib/data'
 import { LoadingSpinner } from '@/components/loading-spinner'
-import { ToolCard } from '@/components/tool-card'
-import Link from 'next/link'
-import type { ToolFinder } from '@/types/database'
-import { useEffect, useState } from 'react'
+import { RealtimeCategoryContent } from '@/components/realtime-category-content'
 
 interface CategoryPageProps {
   params: {
     id: string;
   };
   searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-function getFreeScoreColor(score: number): string {
-  if (score >= 80) return 'bg-green-500'
-  if (score >= 50) return 'bg-yellow-500'
-  return 'bg-red-500'
-}
-
-// 실시간 컴포넌트 추가
-'use client';
-function RealtimeCategoryContent({ id }: { id: string }) {
-  const [tools, setTools] = useState<ToolFinder[]>([]);
-
-  useEffect(() => {
-    // 초기 데이터 로드
-    getToolsByCategory(id).then(setTools);
-
-    // 실시간 구독 설정
-    const subscription = subscribeToToolsByCategory(id, setTools);
-
-    // 컴포넌트 언마운트 시 구독 해제
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [id]);
-
-  if (!tools || tools.length === 0) {
-    return (
-      <div className="bg-card/50 rounded-lg border border-border p-6">
-        <p className="text-muted-foreground text-center">도구를 찾을 수 없습니다.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {tools.map((tool) => (
-        <ToolCard key={tool.id} tool={tool} />
-      ))}
-    </div>
-  );
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
