@@ -220,8 +220,12 @@ export function subscribeToToolsByCategory(categoryId: string, callback: (tools:
   // URL 디코딩
   const decodedCategoryId = decodeURIComponent(categoryId);
   
+  // URL ID를 실제 DB 카테고리명으로 변환
+  const categoryName = CATEGORY_MAPPING[decodedCategoryId] || decodedCategoryId;
+  
   // 디버깅을 위한 로그
-  console.log('Setting up subscription for category:', decodedCategoryId);
+  console.log('Setting up subscription for category ID:', decodedCategoryId);
+  console.log('Mapped to category name:', categoryName);
 
   return supabase
     .channel('toolfinder_changes')
@@ -231,7 +235,7 @@ export function subscribeToToolsByCategory(categoryId: string, callback: (tools:
         event: '*',
         schema: 'public',
         table: 'toolfinder',
-        filter: `category=eq."${decodedCategoryId}"`
+        filter: `category=eq."${categoryName}"`  // 실제 DB 카테고리명 사용
       },
       (payload) => {
         console.log('Received realtime event:', payload);
