@@ -215,8 +215,11 @@ export async function fetchPopularTools() {
   return data || []
 }
 
-// 실시간 구독 함수 추가
+// 실시간 구독 함수 수정
 export function subscribeToToolsByCategory(categoryId: string, callback: (tools: ToolFinder[]) => void) {
+  const decodedCategoryId = decodeURIComponent(categoryId);
+  const categoryName = CATEGORY_MAPPING[decodedCategoryId] || decodedCategoryId;
+
   return supabase
     .channel('toolfinder_changes')
     .on(
@@ -225,7 +228,7 @@ export function subscribeToToolsByCategory(categoryId: string, callback: (tools:
         event: '*',
         schema: 'public',
         table: 'toolfinder',
-        filter: `category=eq.${categoryId}`
+        filter: `category=eq.${categoryName}`
       },
       () => {
         getToolsByCategory(categoryId).then(callback);
