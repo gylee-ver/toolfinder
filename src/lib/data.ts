@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
-import type { ToolFinder, Category, User } from '@/types/database'
+import type { ToolFinder, Category, User, Database } from '@/types/database'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 console.log('Initializing Supabase client with URL:', supabaseUrl)
-export const supabase = createClient<ToolFinder>(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 type CategoryMapping = {
   [key: string]: string;
@@ -213,4 +213,23 @@ export async function fetchPopularTools() {
 
   console.log('Fetched popular tools:', data)
   return data || []
+}
+
+// 실시간 구독 함수 추가
+export function subscribeToToolsByCategory(categoryId: string, callback: (tools: ToolFinder[]) => void) {
+  return supabase
+    .channel('toolfinder_changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'toolfinder',
+        filter: `category=eq.${categoryId}`
+      },
+      () => {
+        getToolsByCategory(categoryId).then(callback);
+      }
+    )
+    .subscribe();
 } 

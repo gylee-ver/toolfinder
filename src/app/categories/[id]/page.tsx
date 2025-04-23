@@ -1,9 +1,10 @@
 import { Suspense } from 'react'
-import { getToolsByCategory, CATEGORY_MAPPING } from '@/lib/data'
+import { getToolsByCategory, CATEGORY_MAPPING, subscribeToToolsByCategory } from '@/lib/data'
 import { LoadingSpinner } from '@/components/loading-spinner'
 import { ToolCard } from '@/components/tool-card'
 import Link from 'next/link'
 import type { ToolFinder } from '@/types/database'
+import { useEffect, useState } from 'react'
 
 interface CategoryPageProps {
   params: {
@@ -18,15 +19,30 @@ function getFreeScoreColor(score: number): string {
   return 'bg-red-500'
 }
 
-async function CategoryContent({ id }: { id: string }) {
-  const tools = await getToolsByCategory(id)
+// 실시간 컴포넌트 추가
+'use client';
+function RealtimeCategoryContent({ id }: { id: string }) {
+  const [tools, setTools] = useState<ToolFinder[]>([]);
+
+  useEffect(() => {
+    // 초기 데이터 로드
+    getToolsByCategory(id).then(setTools);
+
+    // 실시간 구독 설정
+    const subscription = subscribeToToolsByCategory(id, setTools);
+
+    // 컴포넌트 언마운트 시 구독 해제
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [id]);
 
   if (!tools || tools.length === 0) {
     return (
       <div className="bg-card/50 rounded-lg border border-border p-6">
         <p className="text-muted-foreground text-center">도구를 찾을 수 없습니다.</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -35,7 +51,7 @@ async function CategoryContent({ id }: { id: string }) {
         <ToolCard key={tool.id} tool={tool} />
       ))}
     </div>
-  )
+  );
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
@@ -47,7 +63,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       <div className="max-w-6xl mx-auto space-y-12">
         <h1 className="text-3xl font-bold text-foreground">{categoryName} 도구</h1>
         <Suspense fallback={<LoadingSpinner />}>
-          <CategoryContent id={decodedId} />
+          <RealtimeCategoryContent id={decodedId} />
         </Suspense>
       </div>
     </main>
