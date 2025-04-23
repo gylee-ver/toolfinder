@@ -93,11 +93,11 @@ export async function getToolById(id: string) {
 
 export async function getToolsByCategory(categoryId: string) {
   const decodedCategoryId = decodeURIComponent(categoryId);
-  
-  // URL ID가 아닌 실제 카테고리 이름이 전달된 경우 처리
   const categoryName = CATEGORY_MAPPING[decodedCategoryId] || decodedCategoryId;
   
-  console.log('Fetching tools for category:', categoryName);
+  console.log('Category ID (raw):', categoryId);
+  console.log('Category ID (decoded):', decodedCategoryId);
+  console.log('Category Name (mapped):', categoryName);
   
   const { data, error } = await supabase
     .from('toolfinder')
@@ -110,7 +110,8 @@ export async function getToolsByCategory(categoryId: string) {
     return [];
   }
   
-  console.log('Fetched tools for category:', data);
+  console.log('Fetched tools count:', data?.length || 0);
+  console.log('Fetched tools:', data);
   return data || [];
 }
 
@@ -217,15 +218,12 @@ export async function fetchPopularTools() {
 
 // 실시간 구독 함수 수정
 export function subscribeToToolsByCategory(categoryId: string, callback: (tools: ToolFinder[]) => void) {
-  // URL 디코딩
   const decodedCategoryId = decodeURIComponent(categoryId);
-  
-  // URL ID를 실제 DB 카테고리명으로 변환
   const categoryName = CATEGORY_MAPPING[decodedCategoryId] || decodedCategoryId;
   
-  // 디버깅을 위한 로그
-  console.log('Setting up subscription for category ID:', decodedCategoryId);
-  console.log('Mapped to category name:', categoryName);
+  console.log('Subscription - Category ID (raw):', categoryId);
+  console.log('Subscription - Category ID (decoded):', decodedCategoryId);
+  console.log('Subscription - Category Name (mapped):', categoryName);
 
   return supabase
     .channel('toolfinder_changes')
@@ -235,17 +233,19 @@ export function subscribeToToolsByCategory(categoryId: string, callback: (tools:
         event: '*',
         schema: 'public',
         table: 'toolfinder',
-        filter: `category=eq."${categoryName}"`  // 실제 DB 카테고리명 사용
+        filter: `category=eq."${categoryName}"`
       },
       (payload) => {
-        console.log('Received realtime event:', payload);
+        console.log('Received realtime event for category:', categoryName);
+        console.log('Event payload:', payload);
         getToolsByCategory(categoryId).then((tools) => {
+          console.log('Updated tools count:', tools.length);
           console.log('Updated tools:', tools);
           callback(tools);
         });
       }
     )
     .subscribe((status) => {
-      console.log('Subscription status:', status);
+      console.log('Subscription status for category:', categoryName, status);
     });
 } 
