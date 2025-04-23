@@ -217,8 +217,11 @@ export async function fetchPopularTools() {
 
 // 실시간 구독 함수 수정
 export function subscribeToToolsByCategory(categoryId: string, callback: (tools: ToolFinder[]) => void) {
+  // URL 디코딩
   const decodedCategoryId = decodeURIComponent(categoryId);
-  const categoryName = CATEGORY_MAPPING[decodedCategoryId] || decodedCategoryId;
+  
+  // 디버깅을 위한 로그
+  console.log('Setting up subscription for category:', decodedCategoryId);
 
   return supabase
     .channel('toolfinder_changes')
@@ -228,11 +231,17 @@ export function subscribeToToolsByCategory(categoryId: string, callback: (tools:
         event: '*',
         schema: 'public',
         table: 'toolfinder',
-        filter: `category=eq.${categoryName}`
+        filter: `category=eq."${decodedCategoryId}"`
       },
-      () => {
-        getToolsByCategory(categoryId).then(callback);
+      (payload) => {
+        console.log('Received realtime event:', payload);
+        getToolsByCategory(categoryId).then((tools) => {
+          console.log('Updated tools:', tools);
+          callback(tools);
+        });
       }
     )
-    .subscribe();
+    .subscribe((status) => {
+      console.log('Subscription status:', status);
+    });
 } 
