@@ -3,4 +3,10 @@ Allow: /
 Allow: /categories/
 Allow: /tools/
 Disallow: /search
-Sitemap: https://www.toolfinder.kr/sitemap.xml 
+Sitemap: https://www.toolfinder.kr/sitemap.xml
+
+User-agent: Daumoa
+Allow: /
+
+User-agent: Daumoa-mobile
+Allow: / 
